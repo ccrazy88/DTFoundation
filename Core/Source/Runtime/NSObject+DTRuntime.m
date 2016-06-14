@@ -45,13 +45,8 @@ static char DTRuntimeDeallocBlocks;
     
     // See http://stackoverflow.com/questions/6357663/casting-a-block-to-a-void-for-dynamic-class-method-resolution
 
-#if MAC_OS_X_VERSION_MAX_ALLOWED <= MAC_OS_X_VERSION_10_7
-    void *impBlockForIMP = (void *)objc_unretainedPointer(block);
-#else
-    id impBlockForIMP = (__bridge id)objc_unretainedPointer(block);
-#endif
-    
-    IMP myIMP = imp_implementationWithBlock(impBlockForIMP);
+    void *impBlockForIMP = (__bridge void *)block;
+    IMP myIMP = imp_implementationWithBlock((__bridge id)impBlockForIMP);
     
     SEL selector = NSSelectorFromString(selectorName);
     return class_addMethod(self, selector, myIMP, "v@:");
